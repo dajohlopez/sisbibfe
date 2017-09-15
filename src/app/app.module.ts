@@ -24,6 +24,7 @@ export function HttpLoaderFactory(http: Http) {
 // Servicios
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './shared/settings/config.service';
+import { JwtService } from './services/jwt.service';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { ConfigService } from './shared/settings/config.service';
     providers: [
         AuthGuard,
         AuthService,
-        ConfigService
+        ConfigService,
+        JwtService
     ],
     bootstrap: [AppComponent]
 })

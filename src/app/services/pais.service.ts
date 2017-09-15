@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
+import { JwtService } from '../services/jwt.service';
 import { ICountry } from '../shared/settings/interfaces';
 
 @Injectable()
@@ -14,13 +15,16 @@ export class PaisService {
     _baseUrl: string = '';
 
 
-    constructor(private http: Http, private configService: ConfigService) {
+    constructor(private http: Http,
+                private configService: ConfigService,
+                private jwt: JwtService
+    ) {
         this._baseUrl = configService.getApiURI();
     }
 
     //Traer todos el listado de paises
     getPaisesTodos(): Observable<ICountry[]> {
-        return this.http.get(this._baseUrl + 'countries', this.jwt())
+        return this.http.get(this._baseUrl + 'countries', this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
@@ -31,8 +35,8 @@ export class PaisService {
     crearPais(country: ICountry): Observable<ICountry> {
 
         let body = JSON.stringify(country);
-        return this.http.post(this._baseUrl + 'countries', body.toString(), this.jwt())
-            .map((res: Response) => {                
+        return this.http.post(this._baseUrl + 'countries', body.toString(), this.jwt.jwt())
+            .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
@@ -40,7 +44,7 @@ export class PaisService {
 
     //Modificar Pais
     modificarPais(country: ICountry): Observable<void> {
-        return this.http.post(this._baseUrl + 'country/editar', JSON.stringify(country), this.jwt())
+        return this.http.post(this._baseUrl + 'country/editar', JSON.stringify(country), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
@@ -50,7 +54,7 @@ export class PaisService {
 
     //Eliminar Pais
     eliminarPais(id: number): Observable<void> {
-        return this.http.delete(this._baseUrl + 'country/' + id + '/eliminar', this.jwt())
+        return this.http.delete(this._baseUrl + 'country/' + id + '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
@@ -77,14 +81,6 @@ export class PaisService {
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
 
-    private jwt() {
-        // create authorization header with jwt token
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.token) {
-            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
-            headers.append('Content-Type', 'application/json');
-            return new RequestOptions({ headers: headers });
-        }
-    }
+
 
 }

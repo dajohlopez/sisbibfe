@@ -5,32 +5,38 @@ import { ModalModule } from 'ng2-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { PaisComponent } from './pais.component';
-import { PaisRoutingModule } from './pais-routing.module';
+import { AutorComponent } from './autor.component';
+import { AutorRoutingModule } from './autor-routing.module';
 import { PageHeaderModule } from './../../shared';
+import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 
+import { AutorService } from '../../services/autor.service';
 import { PaisService } from '../../services/pais.service';
-import { DataFilterPipe } from '../../shared/dataservices/data-filter.pipe';
+//import { DataFilterPipe } from '../../shared/dataservices/data-filter.pipe';
+import { PagerService } from '../../services/pager.service';
 import { AlertService } from '../../services/alert.service';
 
 @NgModule({
     imports: [
         CommonModule,
-        PaisRoutingModule,
+        AutorRoutingModule,
         PageHeaderModule,
         DataTableModule,        
         ModalModule.forRoot(),
         NgbModule.forRoot(),        
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NguiAutoCompleteModule
     ],
     providers: [
-        PaisService,        
+        AutorService,
+        PaisService,
+        PagerService,
         AlertService        
     ],
     declarations: [
-        PaisComponent,
-        DataFilterPipe
+        AutorComponent,
+        //DataFilterPipe
     ]    
 })
-export class PaisModule { }
+export class AutorModule { }

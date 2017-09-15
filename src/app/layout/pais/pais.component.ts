@@ -10,7 +10,6 @@ import { AlertService } from '../../services/alert.service';
 import * as _ from 'underscore';
 
 import { PaisService } from '../../services/pais.service';
-import { PagerService } from '../../services/index';
 import { ICountry } from '../../shared/settings/interfaces';
 
 @Component({
@@ -24,11 +23,9 @@ export class PaisComponent implements OnInit {
   closeResult: string;
   country: ICountry; //Objecto enviado para la API
 
-  constructor(private paisService: PaisService,
-              private pagerService: PagerService,
+  constructor(private paisService: PaisService,              
               private modalService: NgbModal,
-              private alert: AlertService
-    
+              private alert: AlertService    
   ) {
   }
   titulo1 = "LISTADO DE PAISES";
@@ -38,7 +35,7 @@ export class PaisComponent implements OnInit {
   public id = "";
   public nombrepais = "";
   public btnguardar = "";
-  private modalRef: NgbModalRef;  
+  private modalRef: NgbModalRef;    
 
   //para el modal Registro y Editar
   public showModal(t: string): void {
@@ -119,6 +116,7 @@ export class PaisComponent implements OnInit {
     this.nombrepais = pa.name;
     this.id = pa.id.toString();    
     this.openModal(content);
+    this.titulo_modal = "ELIMINAR";
   }
 
   //boton Nuevo para cargar el formulario en el modal

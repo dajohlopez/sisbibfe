@@ -1,25 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { routerTransition } from '../../router.animations';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import { TypeaheadMatch } from 'ng2-bootstrap/typeahead';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { NgForm } from '@angular/forms';
-import { AlertModule } from 'ng2-bootstrap';
+import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+
+import { AlertService } from '../../services/alert.service';
+
 import * as _ from 'underscore';
 
 import { AutorService } from '../../services/autor.service';
 import { PaisService } from '../../services/pais.service';
-import { PagerService } from '../../services/index'
 
 import { IAutor, ICountry } from '../../shared/settings/interfaces';
 
 
-@Component({
-    moduleId: 'modulo.id',
-    selector: 'autor',
-    templateUrl: 'autor.component.html'
+@Component({    
+    selector: 'app-autor',
+    templateUrl: 'autor.component.html',
+    animations: [routerTransition()]
 })
 export class AutorComponent implements OnInit {
     //propiedades del componente autor
@@ -43,8 +45,10 @@ export class AutorComponent implements OnInit {
     @ViewChild('autoShownModal') public autoShownModal: ModalDirective;
 
     public isModalShown: boolean = false;
-    constructor(private autorService: AutorService, private pagerService: PagerService, private paisService: PaisService) {
-
+    constructor(private alert: AlertService,
+                private autorService: AutorService,                
+                private paisService: PaisService,                
+            ) {
     }
 
     titulo1 = "LISTADO DE AUTORES";
@@ -69,8 +73,7 @@ export class AutorComponent implements OnInit {
         this.isModalShown = true;
     }
     public hideModal(): void {
-        this.autoShownModal.hide();
-        //this.est={};
+        this.autoShownModal.hide();        
     }
     public onHidden(): void {
         this.isModalShown = false;
@@ -97,12 +100,9 @@ export class AutorComponent implements OnInit {
     public cargarAutores() {
         this.autorService.getAutoresTodos().subscribe((todoautores: IAutor[]) => {
             this.todoautores = todoautores;
-            console.log('Listado de Autores cargado ');
-            // set items to json response
+            console.log('Listado de Autores cargado ');            
             this.allItems = todoautores;
-            console.log(this.allItems);
-            // initialize to page 1
-            this.setPage(1);
+            console.log(this.allItems);            
         },
             error => {
                 console.log('Fallo Conexion Autor ' + error);
@@ -112,8 +112,7 @@ export class AutorComponent implements OnInit {
     public cargarPaises() {
         this.paisService.getPaisesTodos().subscribe((countries: ICountry[]) => {
             this.countries = countries;
-            console.log('Listado de Paises cargado ');
-            // set items to json response            
+            console.log('Listado de Paises cargado ');            
             this.countries = countries;
             console.log(countries);
         },
@@ -196,6 +195,7 @@ export class AutorComponent implements OnInit {
         this.limpiarInterface();
 
     }
+
     //Setea el objeto a editar
     public editar(autoreditado) {
         const autoreditar = Object.assign({}, autoreditado)        
@@ -209,15 +209,7 @@ export class AutorComponent implements OnInit {
                 "idpais": this.autor.idpais
             },
             this.model2 = this.autor.idpais
-    }
-    //Para la alerta personalizada
-    /*public addAlert(tipo: string, mensaje: string): void {
-        this.alerts.push({
-            type: tipo,
-            msg: mensaje,
-            timeout: 3000
-        });
-    }*/
+    }    
 
     public limpiarInterface() {
         this.autor = {
@@ -226,20 +218,6 @@ export class AutorComponent implements OnInit {
             "ape_mat": "",
             "idpais": this.model2
         }
-    }
-
-    public setPage(page: number) {
-        if (page < 1 || page > this.pager.totalPages) {
-            this.pagedItems = this.allItems;
-            this.pager = this.pagerService.getPager(this.allItems.length, page);
-            return;
-        }
-
-        // get pager object from service
-        this.pager = this.pagerService.getPager(this.allItems.length, page);
-
-        // get current page of items
-        this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
     }
 
     autocompleListFormatter = (data: any) => {

@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
+import { JwtService } from '../services/jwt.service';
 import { IAutor } from '../shared/settings/interfaces';
 
 @Injectable()
@@ -14,13 +15,16 @@ export class AutorService {
     _baseUrl: string = '';
 
 
-    constructor(private http: Http, private configService: ConfigService) {
+    constructor(private http: Http,
+        private jwt: JwtService,
+        private configService: ConfigService
+    ) {
         this._baseUrl = configService.getApiURI();
     }
 
     //Traer todos el listado de autores
     getAutoresTodos(): Observable<IAutor[]> {
-        return this.http.get(this._baseUrl + 'autores')
+        return this.http.get(this._baseUrl + 'authors', this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
@@ -28,31 +32,18 @@ export class AutorService {
     }
     //crear Autor
     crearAutor(autor: IAutor): Observable<IAutor> {
-
         let body = JSON.stringify(autor);
-        console.log(body);
-        
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.post(this._baseUrl + 'autores', body.toString(), options)
+        return this.http.post(this._baseUrl + 'authors', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
     }
-    
+
     //Modificar Autor
     modificarAutor(autor: IAutor): Observable<void> {
 
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        return this.http.put(this._baseUrl + 'autores' , JSON.stringify(autor), {
-            headers: headers
-        })
+           return this.http.post(this._baseUrl + 'author/editar', JSON.stringify(autor), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
@@ -61,13 +52,13 @@ export class AutorService {
 
     //Eliminar autor
     eliminarAutor(id: number): Observable<void> {
-        return this.http.delete(this._baseUrl + 'autores/' + id)
+        return this.http.delete(this._baseUrl + 'author/' + id + '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
             .catch(this.handleError);
     }
-    
+
     //si ocurre algun error
     private handleError(error: any) {
         var applicationError = error.headers.get('Application-Error');

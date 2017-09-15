@@ -44,7 +44,7 @@
             </div>
             <div class="card-block table-responsive">
                 <table class="table" [mfData]="todopaises | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="5" [(mfSortBy)]="sortBy"
-                    [(mfSortOrder)]="sortOrder">
+                    [(mfSortOrder)]="asc">
                     <thead>
                         <tr>
                             <th style="width: 20%">
@@ -71,8 +71,8 @@
                         <tr *ngFor="let item of mf.data">
                             <td>{{item.id}}</td>
                             <td>{{item.name}}</td>
-                            <td><button type="button" class="btn btn-warning" (click)="editar(item, content)">Editar</button></td>
-                            <td><button type="button" class="btn btn-danger" (click)="setPaisEliminar(item, content1)">X</button></td>
+                            <td><button type="button" class="btn btn-primary fa fa-edit" (click)="editar(item, content)"></button></td>
+                            <td><button type="button" class="btn btn-danger fa fa-trash" (click)="setPaisEliminar(item, content1)"></button></td>
 
                         </tr>
                     </tbody>
@@ -85,62 +85,36 @@
                     </tfoot>
                 </table>
             </div>
-
         </div>
 
 
         <!--modal para eliminar registro    !-->
-        <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title pull-left">Eliminar Registro</h4>
-                        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-danger">
-                            ¿Desea Eliminar al Pais:<br>
-                            << Id: {{id}}>><br>
-                            << Nombre: {{nombrepais}}>>?
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" value="NO" class="btn btn-info" (click)="hideChildModal()" />
-                        <input type="button" value="SI" class="btn btn-warning" (click)="eliminar(id)" />
-                    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- Large modal -->
+                <div class="card-block">
+                    <button class="btn btn-primary" (click)="nuevo(content)">Nuevo</button>
+                    <ng-template #content1 let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{{titulo_modal}}</h4>
+                            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form #frmPais="ngForm" novalidate>
+                            <div class="modal-body">
+                                <p class="text-danger">
+                                    ¿Desea Eliminar al Pais:<br>
+                                    << Id: {{id}}>><br>
+                                        << Nombre: {{nombrepais}}>>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" value="NO" class="btn btn-info" (click)="close()" />
+                                <input type="button" value="SI" class="btn btn-warning" (click)="eliminar(id)" />
+                            </div>
+                        </form>
+                    </ng-template>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <!-- Large modal -->
-            <div class="card-block">
-                <button class="btn btn-primary" (click)="nuevo(content)">Nuevo</button>
-                <ng-template #content1 let-c="close" let-d="dismiss">
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{titulo_modal}}</h4>
-                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                    </div>
-                    <form #frmPais="ngForm" novalidate>
-                        <div class="modal-body">
-                            <p class="text-danger">
-                                ¿Desea Eliminar al Pais:<br>
-                                << Id: {{id}}>><br>
-                                << Nombre: {{nombrepais}}>>?
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" value="NO" class="btn btn-info" (click)="hideChildModal()" />
-                            <input type="button" value="SI" class="btn btn-warning" (click)="eliminar(id)" />
-                        </div>
-                    </form>
-                </ng-template>
-            </div>
-        </div>
-    </div>
