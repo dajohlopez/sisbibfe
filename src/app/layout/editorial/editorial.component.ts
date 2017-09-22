@@ -12,18 +12,19 @@ import { AlertService } from '../../services/alert.service';
 
 import * as _ from 'underscore';
 
-import { AutorService } from '../../services/autor.service';
+import { EditorialService } from '../../services/editorial.service';
 import { PaisService } from '../../services/pais.service';
 
-import { IAuthor, ICountry } from '../../shared/settings/interfaces';
+import { IEditorial, ICountry } from '../../shared/settings/interfaces';
 
 
 @Component({
-    selector: 'app-autor',
-    templateUrl: 'autor.component.html',
+    selector: 'app-editorial',
+    templateUrl: 'editorial.component.html',
     animations: [routerTransition()]
 })
-export class AutorComponent implements OnInit {
+
+export class EditorialComponent implements OnInit {
     // propiedades del componente autor
     public name: string;
     public countries: any[];
@@ -31,23 +32,25 @@ export class AutorComponent implements OnInit {
         'name': ''
     };
     closeResult: string;
-    public titulo1 = 'LISTADO DE AUTORES';
-    todoautores = [];
+    public titulo1 = 'LISTADO DE EDITORIALES';
+    todoeditoriales = [];
     titulo_modal = '';
-    idautor = '';
-    nombreautor = '';
+    ideditorial = '';
+    nombreeditorial = '';
     btnguardar = '';
     private modalRef: NgbModalRef;
+    editor: any;
 
-    public author: any; // Objecto enviado para la API
+    public editorial: any; // Objecto enviado para la API
 
     constructor(
         private alert: AlertService,
-        private autorService: AutorService,
+        private editorialService: EditorialService,
         private paisService: PaisService,
         private modalService: NgbModal
     ) {
     }
+
     // para el modal Registro y Editar
     public showModal(t: string): void {
 
@@ -64,17 +67,17 @@ export class AutorComponent implements OnInit {
 
     // Fin de modal Eliminar Registro
     ngOnInit() {
-        this.cargarAutores();
+        this.cargarEditoriales();
         this.cargarPaises();
     }
 
-    // cargar Autores
-    public cargarAutores() {
-        this.autorService.getAutoresTodos().subscribe((todoautores: IAuthor[]) => {
-            this.todoautores = todoautores;
+    // cargar Editoriales
+    public cargarEditoriales() {
+        this.editorialService.getEditorialesTodos().subscribe((todoeditoriales: IEditorial[]) => {
+            this.todoeditoriales = todoeditoriales;
         },
             error => {
-                console.log('Fallo Conexion Autor ' + error);
+                console.log('Falló Conexion Editorial ' + error);
             });
     }
 
@@ -91,16 +94,16 @@ export class AutorComponent implements OnInit {
     public guardar(aut: any) {
         aut.country_id = this.model2;
         console.log('Este debería ser el id:' + aut.country_id)
-        this.author = {
+        this.editorial = {
             'id': aut.id,
             'name': aut.name,
             'country_id': aut.country_id.id
         }
         if (this.btnguardar === 'NEW') {
-            this.autorService.crearAutor(this.author).subscribe(
+            this.editorialService.crearEditorial(this.editorial).subscribe(
                 () => {
-                    this.alert.showSuccess('Autor creado con éxito');
-                    this.cargarAutores();
+                    this.alert.showSuccess('Editorial creado con éxito');
+                    this.cargarEditoriales();
                     this.model2 = {
                         id: 0 as number,
                         name: ''
@@ -108,15 +111,16 @@ export class AutorComponent implements OnInit {
                     this.close();
                 },
                 error => {
+                    console.log(error)
                     this.alert.showError(error);
                 });
         }
 
         if (this.btnguardar === 'EDIT') {
-            this.autorService.modificarAutor(this.author).subscribe(
+            this.editorialService.modificarEditorial(this.editorial).subscribe(
                 () => {
-                    this.alert.showSuccess('Autor modificado con éxito');
-                    this.cargarAutores();
+                    this.alert.showSuccess('Editorial modificado con éxito');
+                    this.cargarEditoriales();
                     this.model2 = {
                         id: 0 as number,
                         name: ''
@@ -127,14 +131,14 @@ export class AutorComponent implements OnInit {
                     this.alert.showError(error);
                 });
         }
-
     }
+
     // Eliminar autor accion
     public eliminar(id: number) {
-        this.autorService.eliminarAutor(id).subscribe(
+        this.editorialService.eliminarEditorial(id).subscribe(
             () => {
-                this.alert.showSuccess('Autor eliminado con éxito')
-                this.cargarAutores();
+                this.alert.showSuccess('Editorial eliminado con éxito')
+                this.cargarEditoriales();
                 this.close();
             },
             error => {
@@ -142,10 +146,21 @@ export class AutorComponent implements OnInit {
             });
     }
 
+    // Buscador por nombre
+    public buscarNombre(nombre: string) {
+        this.editorialService.buscarNombreEditorial(nombre).subscribe((editor: any) => {
+            this.editor = editor;
+            console.log(editor);
+            },
+            error => {
+                this.alert.showError(error);
+            });
+    }
+
     // Setea datos Eliminar
-    public setAutorEliminar(au: IAuthor, content) {
-        this.nombreautor = au.name;
-        this.idautor = au.id.toString();
+    public setAutorEliminar(ed: IEditorial, content) {
+        this.nombreeditorial = ed.name;
+        this.ideditorial = ed.id.toString();
         this.openModal(content);
         this.titulo_modal = 'ELIMINAR';
     }
@@ -162,30 +177,30 @@ export class AutorComponent implements OnInit {
         this.model2 = autoreditado.country;
         const autoreditar = Object.assign({}, autoreditado)
         this.showModal('M');
-        this.author = autoreditar,
-            this.author = {
-                'id': this.author.id,
-                'name': this.author.name,
-                'country': this.author.country_id
+        this.editorial = autoreditar,
+            this.editorial = {
+                'id': this.editorial.id,
+                'name': this.editorial.name,
+                'country': this.editorial.country_id
             }
         this.openModal(content);
     }
 
     public limpiarInterface() {
-        this.author = {
+        this.editorial = {
             'name': '',
             'country_id': this.model2
         }
     }
 
     // Formatear el auto-complete
-    autocompleListFormatter = (data: any) => {
+    public autocompleListFormatter = (data: any) => {
         const html = `${data.name}`;
         return (html);
     }
 
     // Abrir modal
-    openModal(content) {
+    public openModal(content) {
         this.modalRef = this.modalService.open(content);
         this.modalRef.result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
@@ -195,7 +210,7 @@ export class AutorComponent implements OnInit {
     }
 
     // Cerrar local
-    close() {
+    public close() {
         this.modalRef.close();
     }
 

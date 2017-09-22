@@ -7,67 +7,70 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
+import { JwtService } from '../services/jwt.service';
 import { IEditorial } from '../shared/settings/interfaces';
 
 @Injectable()
 export class EditorialService {
-    _baseUrl: string = '';
+    _baseUrl = '';
 
 
-    constructor(private http: Http, private configService: ConfigService) {
+    constructor(private http: Http,
+        private configService: ConfigService,
+        private jwt: JwtService
+    ) {
         this._baseUrl = configService.getApiURI();
     }
 
-    //Traer todos el listado de editoriales
-    getEditorialesTodos(): Observable<IEditorial[]> {
-        return this.http.get(this._baseUrl + 'editorials', this.jwt())
+    // Traer todos el listado de editoriales
+    public getEditorialesTodos(): Observable<IEditorial[]> {
+        return this.http.get(this._baseUrl + 'editorials', this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
     }
-    //crear Editorial
-    crearEditorial(editorial: IEditorial): Observable<IEditorial> {
+    // crear Editorial
+    public crearEditorial(editorial: IEditorial): Observable<IEditorial> {
 
-        let body = JSON.stringify(editorial);
-        console.log(body);
-        var headers = new Headers();
+        const body = JSON.stringify(editorial);
 
-        headers.append('Content-Type', 'application/json');
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.post(this._baseUrl + 'editorials', body.toString(), options)
+        return this.http.post(this._baseUrl + 'editorials', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
     }
-    
-    //Modificar Editorial
-    modificarEditorial(editorial: IEditorial): Observable<void> {
 
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+    // Modificar Editorial
+    public modificarEditorial(editorial: IEditorial): Observable<void> {
 
-        return this.http.put(this._baseUrl + 'editoriales' , JSON.stringify(editorial), {
-            headers: headers
-        })
+        return this.http.put(this._baseUrl + 'editoriales/editar', JSON.stringify(editorial), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
             .catch(this.handleError);
     }
 
-    //Eliminar editorial
-    eliminarEditorial(id: number): Observable<void> {
-        return this.http.delete(this._baseUrl + 'editoriales/' + id)
+    // Eliminar editorial
+    public eliminarEditorial(id: number): Observable<void> {
+        return this.http.delete(this._baseUrl + 'editoriales/' + id + '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
             .catch(this.handleError);
     }
-    
-    //si ocurre algun error
+
+    // Busqueda por nombre
+    public buscarNombreEditorial(nombre: string): Observable<void> {
+        return this.http.get(this._baseUrl + 'editorials/search/' + nombre, this.jwt.jwt())
+            .map((res: Response) => {
+                return res.json();
+            })
+            .catch(this.handleError);
+    }
+
+    // si ocurre algun error
     private handleError(error: any) {
         var applicationError = error.headers.get('Application-Error');
         var serverError = error.json();
@@ -86,16 +89,4 @@ export class EditorialService {
 
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
-
-    private jwt() {
-        // create authorization header with jwt token
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.token) {
-            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
-            headers.append('Content-Type', 'application/json');
-            return new RequestOptions({ headers: headers });
-        }
-    }
-
-
 }

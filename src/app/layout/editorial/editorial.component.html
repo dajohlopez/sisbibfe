@@ -1,5 +1,5 @@
 <div [@routerTransition]>
-    <app-page-header [heading]="'Autor'" [icon]="'fa-table'"></app-page-header>
+    <app-page-header [heading]="'Editorial'" [icon]="'fa-table'"></app-page-header>
 
     <div class="row">
         <div class="col-sm-12">
@@ -13,11 +13,11 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                     </div>
-                    <form #frmAutor="ngForm" novalidate>
+                    <form #frmEditorial="ngForm" novalidate>
                         <div class="modal-body">
 
-                            <label class="control-label"><i class="fa fa-user" aria-hidden="true"></i>Nombres:</label>
-                            <input type="text" class="form-control" required [(ngModel)]="author.name" name="nombre" #nombreState="ngModel">
+                            <label class="control-label"><i class="fa fa-user" aria-hidden="true"></i>Editorial:</label>
+                            <input type="text" class="form-control" required [(ngModel)]="editorial.name" name="nombre" #nombreState="ngModel">
                             <div [hidden]="nombreState.valid || nombreState.pristine" class="alert alert-danger">
                                 Nombres requerido
                             </div>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" value="Cancelar" class="btn btn-danger" (click)="close()" />
-                            <input type="button" value="Guardar" class="btn btn-success" (click)="guardar(author)" [disabled]="!frmAutor.form.valid"
+                            <input type="button" value="Guardar" class="btn btn-success" (click)="guardar(editorial)" [disabled]="!frmEditorial.form.valid"
                             />
                         </div>
                     </form>
@@ -50,7 +50,7 @@
                 </h4>
             </div>
             <div class="card-block table-responsive">
-                <table class="table" [mfData]="todoautores | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="5" [(mfSortBy)]="sortBy"
+                <table class="table" [mfData]="todoeditoriales | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="5" [(mfSortBy)]="sortBy"
                     [(mfSortOrder)]="asc">
                     <thead>
                         <tr>
@@ -58,7 +58,7 @@
                                 <mfDefaultSorter by="id">ID</mfDefaultSorter>
                             </th>
                             <th style="width: 20%">
-                                <mfDefaultSorter by="name">Nombre</mfDefaultSorter>
+                                <mfDefaultSorter by="name">Editorial</mfDefaultSorter>
                             </th>
                             <th style="width: 20%">
                                 <mfDefaultSorter by="name">País</mfDefaultSorter>
@@ -83,7 +83,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.country.name}}</td>
                             <td><button type="button" class="btn btn-primary fa fa-edit" (click)="editar(item, content)"></button></td>
-                            <td><button type="button" class="btn btn-danger fa fa-trash" (click)="setAutorEliminar(item, content1)"></button></td>
+                            <td><button type="button" class="btn btn-danger fa fa-trash" (click)="setPaisEliminar(item, content1)"></button></td>
 
                         </tr>
                     </tbody>
@@ -99,33 +99,36 @@
         </div>
     </div>
 
-    <!--modal para eliminar registro    !-->
-    <div class="row">
-        <div class="col-sm-12">
-            <!-- Large modal -->
-            <div class="card-block">
-                <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="panel">
+
+        <!--modal para eliminar registro    !-->
+        <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{titulo_modal}}</h4>
-                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <h4 class="modal-title pull-left">Eliminar Registro</h4>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
                             <span aria-hidden="true">&times;</span>
-                            </button>
+                        </button>
                     </div>
-                    <form #frmPais="ngForm" novalidate>
-                        <div class="modal-body">
-                            <p class="text-danger">
-                                ¿Desea Eliminar al Autor:<br>
-                                << Id: {{idautor}}>><br>
-                                    << Nombre: {{nombreautor}}>>
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" value="NO" class="btn btn-info" (click)="close()" />
-                            <input type="button" value="SI" class="btn btn-warning" (click)="eliminar(idautor)" />
-                        </div>
-                    </form>
-                </ng-template>
+                    <div class="modal-body">
+                        <p class="text-danger">
+                            ¿Desea Eliminar al Editorial:<br>
+                            << Id: {{ideditorial}}>><br>
+                                << Nombre y Apellidos: {{nombreeditorial}}>>?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" value="NO" class="btn btn-info" (click)="hideChildModal()" />
+                        <input type="button" value="SI" class="btn btn-warning" (click)="eliminar(ideditorial)" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="panel">
+            <input class="form-control mr-sm-2" type="text" placeholder="Buscar Héroe" (keyup.enter)="buscarHeroe(buscarTexto.value)" #buscarTexto>
+            <button (click)="buscarNombre(buscarTexto.value)"
+            class="btn btn-outline-primary my-2 my-sm-0" type="button">Buscar</button>
+          </div>
 </div>

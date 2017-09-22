@@ -6,20 +6,21 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 import { HeaderComponent, SidebarComponent } from '../shared';
-//import { DataFilterPipe } from '../shared/dataservices/data-filter.pipe';
+import { DataFilterPipe } from '../shared/index';
 
 @NgModule({
     imports: [
         CommonModule,
         NgbDropdownModule.forRoot(),
         LayoutRoutingModule,
-        TranslateModule
+        TranslateModule,
+        // DataFilterPipe
     ],
     declarations: [
         LayoutComponent,
         HeaderComponent,
         SidebarComponent,
-        //DataFilterPipe
+        // DataFilterPipe
     ]
 })
 export class LayoutModule { }

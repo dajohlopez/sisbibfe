@@ -12,8 +12,7 @@ import { ICountry } from '../shared/settings/interfaces';
 
 @Injectable()
 export class PaisService {
-    _baseUrl: string = '';
-
+    _baseUrl = '';
 
     constructor(private http: Http,
                 private configService: ConfigService,
@@ -22,7 +21,7 @@ export class PaisService {
         this._baseUrl = configService.getApiURI();
     }
 
-    //Traer todos el listado de paises
+    // Traer todos el listado de paises
     getPaisesTodos(): Observable<ICountry[]> {
         return this.http.get(this._baseUrl + 'countries', this.jwt.jwt())
             .map((res: Response) => {
@@ -31,10 +30,10 @@ export class PaisService {
             .catch(this.handleError);
     }
 
-    //crear Pais
+    // crear Pais
     crearPais(country: ICountry): Observable<ICountry> {
 
-        let body = JSON.stringify(country);
+        const body = JSON.stringify(country);
         return this.http.post(this._baseUrl + 'countries', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
@@ -42,7 +41,7 @@ export class PaisService {
             .catch(this.handleError);
     }
 
-    //Modificar Pais
+    // Modificar Pais
     modificarPais(country: ICountry): Observable<void> {
         return this.http.post(this._baseUrl + 'country/editar', JSON.stringify(country), this.jwt.jwt())
             .map((res: Response) => {
@@ -52,27 +51,28 @@ export class PaisService {
 
     }
 
-    //Eliminar Pais
+    // Eliminar Pais
     eliminarPais(id: number): Observable<void> {
         return this.http.delete(this._baseUrl + 'country/' + id + '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
-                return;
+                return res.json();
             })
             .catch(this.handleError);
     }
 
-    //si ocurre algun error
+    // si ocurre algun error
     private handleError(error: any) {
-        var applicationError = error.headers.get('Application-Error');
-        var serverError = error.json();
+        const applicationError = error.headers.get('Application-Error');
+        const serverError = error.json();
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
             console.log('Se detectó un Error' + serverError);
 
             for (var key in serverError) {
-                if (serverError[key])
+                if (serverError[key]){
                     modelStateErrors += serverError[key] + '\n';
+                }
             }
         }
 
@@ -80,7 +80,4 @@ export class PaisService {
 
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
-
-
-
 }

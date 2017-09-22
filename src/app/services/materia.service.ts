@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
+import { JwtService } from '../services/jwt.service';
 import { IMateria } from '../shared/settings/interfaces';
 
 @Injectable()
@@ -14,13 +15,16 @@ export class MateriaService {
     _baseUrl: string = '';
 
 
-    constructor(private http: Http, private configService: ConfigService) {
+    constructor(private http: Http,
+                private configService: ConfigService,
+                private jwt: JwtService
+            ) {
         this._baseUrl = configService.getApiURI();
     }
 
     //Traer todos el listado de materias
     getMateriasTodos(): Observable<IMateria[]> {
-        return this.http.get(this._baseUrl + 'materias')
+        return this.http.get(this._baseUrl + 'matters', this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
@@ -29,14 +33,9 @@ export class MateriaService {
     //crear Materia
     crearPais(materia: IMateria): Observable<IMateria> {
 
-        let body = JSON.stringify(materia);
-        console.log(body);
-        var headers = new Headers();
+        let body = JSON.stringify(materia);        
 
-        headers.append('Content-Type', 'application/json');
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.post(this._baseUrl + 'materias', body.toString(), options)
+        return this.http.post(this._baseUrl + 'matters', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
             })
@@ -46,12 +45,7 @@ export class MateriaService {
     //Modificar Materia
     modificarMateria(materia: IMateria): Observable<void> {
 
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        console.log(materia);
-        return this.http.put(this._baseUrl + 'materias', JSON.stringify(materia), {
-            headers: headers
-        })
+        return this.http.put(this._baseUrl + 'mattes/editar', JSON.stringify(materia), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
@@ -60,7 +54,7 @@ export class MateriaService {
 
     //Eliminar Materia
     eliminarMateria(idmateria: number): Observable<void> {
-        return this.http.delete(this._baseUrl + 'materias/' + idmateria)
+        return this.http.delete(this._baseUrl + 'matters/' + idmateria+ '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })

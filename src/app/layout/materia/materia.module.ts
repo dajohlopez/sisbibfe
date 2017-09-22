@@ -5,8 +5,8 @@ import { ModalModule } from 'ng2-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { PaisComponent } from './pais.component';
-import { PaisRoutingModule } from './pais-routing.module';
+import { MateriaComponent } from './materia.component';
+import { MateriaRoutingModule } from './materia-routing.module';
 import { PageHeaderModule } from './../../shared';
 
 import { PaisService } from '../../services/pais.service';
@@ -16,7 +16,7 @@ import { AlertService } from '../../services/alert.service';
 @NgModule({
     imports: [
         CommonModule,
-        PaisRoutingModule,
+        MateriaRoutingModule,
         PageHeaderModule,
         DataTableModule,        
         ModalModule.forRoot(),
@@ -30,8 +30,8 @@ import { AlertService } from '../../services/alert.service';
         AlertService        
     ],
     declarations: [
-        PaisComponent,
+        MateriaComponent,
         //DataFilterPipe
     ]    
 })
-export class PaisModule { }
+export class MateriaModule { }

@@ -10,10 +10,13 @@
             <i class="fa fa-fw fa-table"></i>&nbsp;{{ 'tables' | translate }}
         </a>
         <a [routerLink]="['/pais']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-fw fa-table"></i>&nbsp;{{ 'Pais' | translate }}
+            <i class="fa fa-globe"></i>&nbsp;{{ 'Pais' | translate }}
         </a>
         <a [routerLink]="['/autor']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-fw fa-user"></i>&nbsp;{{ 'Autor' | translate }}
+            <i class="fa fa-address-card"></i>&nbsp;{{ 'Autor' | translate }}
+        </a>
+        <a [routerLink]="['/editorial']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-file-text"></i>&nbsp;{{ 'Editorial' | translate }}
         </a>
         <a [routerLink]="['/forms']" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-edit"></i>&nbsp;{{ 'forms' | translate }}

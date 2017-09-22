@@ -12,7 +12,7 @@ import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 
 import { AutorService } from '../../services/autor.service';
 import { PaisService } from '../../services/pais.service';
-//import { DataFilterPipe } from '../../shared/dataservices/data-filter.pipe';
+import { SharedModule } from '../../shared/shared.module';
 import { PagerService } from '../../services/pager.service';
 import { AlertService } from '../../services/alert.service';
 
@@ -26,7 +26,8 @@ import { AlertService } from '../../services/alert.service';
         NgbModule.forRoot(),        
         FormsModule,
         ReactiveFormsModule,
-        NguiAutoCompleteModule
+        NguiAutoCompleteModule,
+        SharedModule
     ],
     providers: [
         AutorService,

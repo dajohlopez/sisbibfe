@@ -11,7 +11,7 @@ import { AuthGuard } from './shared';
 import { ToastrModule } from 'toastr-ng2';
 import { ModalModule } from 'ng2-bootstrap';
 
-import { DataTableModule } from "angular2-datatable";
+import { DataTableModule } from 'angular2-datatable';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
@@ -29,7 +29,7 @@ import { JwtService } from './services/jwt.service';
 
 @NgModule({
     declarations: [
-        AppComponent        
+        AppComponent
     ],
     imports: [
         BrowserModule,

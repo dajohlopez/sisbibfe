@@ -1,13 +1,12 @@
-export interface IAutor {
+export interface IAuthor {
     id?: number;
-    nombre: string;
-    ape_pat: string;
-    ape_mat: string;
-    idpais: ICountry;
+    name: string;
+    country_id: ICountry;
 }
+
 export interface IEditorial {
-    ideditorial?: number;
-    nombre: string;
+    id?: number;
+    name: string;
     idpais: ICountry;
 }
 
@@ -31,11 +30,11 @@ export interface IAnexo {
 export interface IUsuario {
     idusuario?: number;
     nombre: string;
-    password: string;    
+    password: string;
 }
 
 export interface IUser {
     id?: number;
     email: string;
-    password: string;    
+    password: string;
 }

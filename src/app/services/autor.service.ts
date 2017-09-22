@@ -8,7 +8,7 @@ import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
 import { JwtService } from '../services/jwt.service';
-import { IAutor } from '../shared/settings/interfaces';
+import { IAuthor } from '../shared/settings/interfaces';
 
 @Injectable()
 export class AutorService {
@@ -23,7 +23,7 @@ export class AutorService {
     }
 
     //Traer todos el listado de autores
-    getAutoresTodos(): Observable<IAutor[]> {
+    getAutoresTodos(): Observable<IAuthor[]> {
         return this.http.get(this._baseUrl + 'authors', this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
@@ -31,8 +31,8 @@ export class AutorService {
             .catch(this.handleError);
     }
     //crear Autor
-    crearAutor(autor: IAutor): Observable<IAutor> {
-        let body = JSON.stringify(autor);
+    crearAutor(author: IAuthor): Observable<IAuthor> {
+        let body = JSON.stringify(author);
         return this.http.post(this._baseUrl + 'authors', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
@@ -41,7 +41,7 @@ export class AutorService {
     }
 
     //Modificar Autor
-    modificarAutor(autor: IAutor): Observable<void> {
+    modificarAutor(autor: IAuthor): Observable<void> {
 
            return this.http.post(this._baseUrl + 'author/editar', JSON.stringify(autor), this.jwt.jwt())
             .map((res: Response) => {
