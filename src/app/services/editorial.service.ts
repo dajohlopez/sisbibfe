@@ -45,7 +45,7 @@ export class EditorialService {
     // Modificar Editorial
     public modificarEditorial(editorial: IEditorial): Observable<void> {
 
-        return this.http.put(this._baseUrl + 'editoriales/editar', JSON.stringify(editorial), this.jwt.jwt())
+        return this.http.put(this._baseUrl + 'editorial/editar', JSON.stringify(editorial), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
@@ -72,16 +72,17 @@ export class EditorialService {
 
     // si ocurre algun error
     private handleError(error: any) {
-        var applicationError = error.headers.get('Application-Error');
-        var serverError = error.json();
-        var modelStateErrors: string = '';
+        const applicationError = error.headers.get('Application-Error');
+        const serverError = error.json();
+        var modelStateErrors = '';
 
         if (!serverError.type) {
             console.log('Se detecto un Error' + serverError);
 
             for (var key in serverError) {
-                if (serverError[key])
+                if (serverError[key]) {
                     modelStateErrors += serverError[key] + '\n';
+                }
             }
         }
 

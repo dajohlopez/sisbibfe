@@ -6,7 +6,7 @@ export class UserService {
     private isUserLoggedIn;
     private username;
 
-    constructor() { 
+    constructor() {
         this.isUserLoggedIn = false;
     }
 

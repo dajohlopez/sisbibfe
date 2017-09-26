@@ -1,27 +1,39 @@
 <div class="login-page" [@routerTransition]>
     <div class="row">
         <div class="col-md-4 push-md-4">
-            <img class="user-avatar" src="assets/images/logo.png" width="150px" />
-            <h1>SB Admin BS4 Angular4</h1>
-            <form role="form">
+            <img class="user-avatar" src="assets/images/libro.png" width="150px" />
+            <h1>SISBIB</h1>
+            <form #frmUser="ngForm" novalidate>
                 <div class="form-content">
                     <div class="form-group">
-                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="Full Name">
+                        <input type="text" name="name" [(ngModel)]="user.name" class="form-control input-underline input-lg" placeholder="Nombre" required #nombreState="ngModel">
+                        <small [hidden]="nombreState.valid || nombreState.pristine" class="alert alert-danger">
+                            Nombre es requerido
+                        </small>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="Email">
+                        <input type="email" name="email" [(ngModel)]="user.email" class="form-control input-underline input-lg" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" #emailState="ngModel">
+                        <small [hidden]="emailState.valid || emailState.pristine" class="alert alert-danger">
+                            Email es requerido y el formato debe ser <i>john@doe.com</i>.
+                        </small>
                     </div>
 
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password">
+                    <div class="form-group">                        
+                        <input type="password" name="password" [(ngModel)]="user.password" class="form-control input-underline input-lg" required validateEqual="confirmPassword" reverse="true" placeholder="Contraseña" #password="ngModel">
+                        <small [hidden]="password.valid || password.pristine" class="alert alert-danger">
+                            Contraseña es requerida 
+                        </small>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Repeat Password">
+                        <input type="password" name="confirmPassword" [(ngModel)]="user.confirmPassword" class="form-control input-underline input-lg" required validateEqual="password" placeholder="Repita Contraseña" #confirmPassword="ngModel">
+                        <small [hidden]="confirmPassword.valid || confirmPassword.pristine" class="alert alert-danger">
+                            Las contraseñas no coinciden
+                        </small>
                     </div>
                 </div>
-                <a class="btn rounded-btn" [routerLink]="['/dashboard']"> Register </a>&nbsp;
-                <a class="btn rounded-btn" [routerLink]="['/login']"> Log in </a>
+                <button class="btn rounded-btn" (click)="registrar(user)" [disabled]="!frmUser.form.valid"> Registrar </button>&nbsp;
+                <a class="btn rounded-btn" [routerLink]="['/login']"> Iniciar </a>
             </form>
         </div>
     </div>

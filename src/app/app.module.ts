@@ -13,6 +13,9 @@ import { ModalModule } from 'ng2-bootstrap';
 
 import { DataTableModule } from 'angular2-datatable';
 
+import { AlertService } from './services/alert.service';
+import { UsuarioService } from './services/usuario.service';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
     // for development
@@ -53,7 +56,9 @@ import { JwtService } from './services/jwt.service';
         AuthGuard,
         AuthService,
         ConfigService,
-        JwtService
+        JwtService,
+        AlertService,
+        UsuarioService
     ],
     bootstrap: [AppComponent]
 })

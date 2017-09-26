@@ -14,9 +14,10 @@ import { ICountry } from '../shared/settings/interfaces';
 export class PaisService {
     _baseUrl = '';
 
-    constructor(private http: Http,
-                private configService: ConfigService,
-                private jwt: JwtService
+    constructor(
+        private http: Http,
+        private configService: ConfigService,
+        private jwt: JwtService
     ) {
         this._baseUrl = configService.getApiURI();
     }

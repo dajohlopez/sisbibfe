@@ -6,15 +6,18 @@
             <form role="form" (ngSubmit)="onLoggedin(f)" #f="ngForm">
                 <div class="form-content">
                     <div class="form-group">
-                        <input type="email" ngModel name="email" class="form-control input-underline input-lg" id="email" placeholder="Email" required>
+                        <input type="email" id="email" name="email" ngModel class="form-control input-underline input-lg" placeholder="Email" required #email="ngModel">
+                        <div [hidden]="email.valid || (email.pristine && !f.submitted)">
+                            Email es requerido y el formato debe ser: <i>john@doe.com</i>.
+                        </div>
                     </div>
                     <div class="form-group">
                         <input type="password" ngModel name="password" class="form-control input-underline input-lg" id="password" placeholder="Password" required>
                     </div>
                 </div>
-                <button class="btn rounded-btn" [disabled]="!f.valid"> Log in </button>
+                <button class="btn rounded-btn" [disabled]="!f.valid"> Iniciar </button>
                 &nbsp;
-                <button class="btn rounded-btn" [routerLink]="['/signup']">Register</button>
+                <a class="btn rounded-btn" [routerLink]="['/signup']">Registrar</a>
             </form>
         </div>
     </div>

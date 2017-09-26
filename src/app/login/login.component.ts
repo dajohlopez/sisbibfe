@@ -17,28 +17,25 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
 
     constructor(private toastrService: ToastrService,
-                private authService: AuthService,
-                private _vcr: ViewContainerRef,
-                public router: Router) {
+        private authService: AuthService,
+        private _vcr: ViewContainerRef,
+        public router: Router
+    ) {
     }
 
     ngOnInit() {
     }
 
     onLoggedin(form: NgForm) {
-        console.log(form.value.email);
-        console.log(form.value.password);
         this.authService.signin(form.value.email, form.value.password)
-        .subscribe(
-        () => {
-            this.showSuccess();
-            this.router.navigate(['/dashboard']);
-            tokenData => console.log(tokenData);
-        },
-        error => {
-            error => console.log(error);
-            this.showError();
-        });
+            .subscribe(
+            () => {
+                this.showSuccess();
+                this.router.navigate(['/dashboard']);
+            },
+            error => {
+                this.showError();
+            });
         // localStorage.setItem('isLoggedin', 'true');
     }
 

@@ -7,18 +7,23 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { ConfigService } from '../shared/settings/config.service';
+// import { JwtService } from '../services/jwt.service';
 import { IUsuario } from '../shared/settings/interfaces';
 
 @Injectable()
 export class UsuarioService {
-    _baseUrl: string = '';
+    _baseUrl = '';
 
 
-    constructor(private http: Http, private configService: ConfigService) {
+    constructor(
+        private http: Http,
+        private configService: ConfigService/*,
+        private jwt: JwtService*/
+    ) {
         this._baseUrl = configService.getApiURI();
     }
 
-    //Traer todos el listado de usuarios
+    // Traer todos el listado de usuarios
     public getUsuariosTodos(): Observable<IUsuario[]> {
         return this.http.get(this._baseUrl + 'usuarios')
             .map((res: Response) => {
@@ -26,39 +31,27 @@ export class UsuarioService {
             })
             .catch(this.handleError);
     }
-    //crear Usuario
-    public crearUsuario(usuario: IUsuario): Observable<IUsuario> {
+    // crear Usuario
+    public crearUsuario(usuario: any): Observable<IUsuario> {
 
-        let body = JSON.stringify(usuario);
-        console.log(body);
-        var headers = new Headers();
-
-        headers.append('Content-Type', 'application/json');
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.post(this._baseUrl + 'usuarios', body.toString(), options)
+        return this.http.post(this._baseUrl + 'auth_register', usuario/*, this.jwt.jwt()*/ )
             .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
     }
-    
-    //Modificar Usuario
+
+    // Modificar Usuario
     public modificarUsuario(anexo: IUsuario): Observable<void> {
 
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        return this.http.put(this._baseUrl + 'usuarios' , JSON.stringify(anexo), {
-            headers: headers
-        })
+        return this.http.put(this._baseUrl + 'usuarios', JSON.stringify(anexo) /*, this.jwt.jwt()*/)
             .map((res: Response) => {
                 return;
             })
             .catch(this.handleError);
     }
 
-    //Eliminar Usuario
+    // Eliminar Usuario
     public eliminarUsuario(id: number): Observable<void> {
         return this.http.delete(this._baseUrl + 'usuarios/' + id)
             .map((res: Response) => {
@@ -66,19 +59,20 @@ export class UsuarioService {
             })
             .catch(this.handleError);
     }
-    
-    //si ocurre algun error
+
+    // si ocurre algun error
     private handleError(error: any) {
-        var applicationError = error.headers.get('Application-Error');
-        var serverError = error.json();
-        var modelStateErrors: string = '';
+        const applicationError = error.headers.get('Application-Error');
+        const serverError = error.json();
+        var modelStateErrors = '';
 
         if (!serverError.type) {
             console.log('Se detectó un Error' + serverError);
 
-            for (var key in serverError) {
-                if (serverError[key])
+            for (const key in serverError) {
+                if (serverError[key]) {
                     modelStateErrors += serverError[key] + '\n';
+                }
             }
         }
 
@@ -86,6 +80,4 @@ export class UsuarioService {
 
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
-
-
 }

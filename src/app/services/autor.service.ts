@@ -12,7 +12,7 @@ import { IAuthor } from '../shared/settings/interfaces';
 
 @Injectable()
 export class AutorService {
-    _baseUrl: string = '';
+    _baseUrl = '';
 
 
     constructor(private http: Http,
@@ -22,7 +22,7 @@ export class AutorService {
         this._baseUrl = configService.getApiURI();
     }
 
-    //Traer todos el listado de autores
+    // Traer todos el listado de autores
     getAutoresTodos(): Observable<IAuthor[]> {
         return this.http.get(this._baseUrl + 'authors', this.jwt.jwt())
             .map((res: Response) => {
@@ -30,9 +30,9 @@ export class AutorService {
             })
             .catch(this.handleError);
     }
-    //crear Autor
+    // crear Autor
     crearAutor(author: IAuthor): Observable<IAuthor> {
-        let body = JSON.stringify(author);
+        const body = JSON.stringify(author);
         return this.http.post(this._baseUrl + 'authors', body.toString(), this.jwt.jwt())
             .map((res: Response) => {
                 return res.json();
@@ -40,17 +40,17 @@ export class AutorService {
             .catch(this.handleError);
     }
 
-    //Modificar Autor
+    // Modificar Autor
     modificarAutor(autor: IAuthor): Observable<void> {
 
-           return this.http.post(this._baseUrl + 'author/editar', JSON.stringify(autor), this.jwt.jwt())
+        return this.http.post(this._baseUrl + 'author/editar', JSON.stringify(autor), this.jwt.jwt())
             .map((res: Response) => {
                 return;
             })
             .catch(this.handleError);
     }
 
-    //Eliminar autor
+    // Eliminar autor
     eliminarAutor(id: number): Observable<void> {
         return this.http.delete(this._baseUrl + 'author/' + id + '/eliminar', this.jwt.jwt())
             .map((res: Response) => {
@@ -59,18 +59,19 @@ export class AutorService {
             .catch(this.handleError);
     }
 
-    //si ocurre algun error
+    // si ocurre algun error
     private handleError(error: any) {
-        var applicationError = error.headers.get('Application-Error');
-        var serverError = error.json();
-        var modelStateErrors: string = '';
+        const applicationError = error.headers.get('Application-Error');
+        const serverError = error.json();
+        var modelStateErrors = '';
 
         if (!serverError.type) {
             console.log('Se detecto un Error' + serverError);
 
             for (var key in serverError) {
-                if (serverError[key])
+                if (serverError[key]) {
                     modelStateErrors += serverError[key] + '\n';
+                }
             }
         }
 
@@ -78,6 +79,4 @@ export class AutorService {
 
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
-
-
 }

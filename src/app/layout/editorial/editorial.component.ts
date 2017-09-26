@@ -148,9 +148,9 @@ export class EditorialComponent implements OnInit {
 
     // Buscador por nombre
     public buscarNombre(nombre: string) {
-        this.editorialService.buscarNombreEditorial(nombre).subscribe((editor: any) => {
-            this.editor = editor;
-            console.log(editor);
+        this.editorialService.buscarNombreEditorial(nombre).subscribe((editr: any) => {
+            this.editor = editr;
+            console.log(this.editor);
             },
             error => {
                 this.alert.showError(error);
