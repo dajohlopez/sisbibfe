@@ -4,6 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -31,15 +32,16 @@ export class EditorialComponent implements OnInit {
     public model2: any = {
         'name': ''
     };
-    closeResult: string;
+    public closeResult: string;
     public titulo1 = 'LISTADO DE EDITORIALES';
-    todoeditoriales = [];
-    titulo_modal = '';
-    ideditorial = '';
-    nombreeditorial = '';
-    btnguardar = '';
+    public todoeditoriales = [];
+    public titulo_modal = '';
+    public ideditorial = '';
+    public nombreeditorial = '';
+    public btnguardar = '';
     private modalRef: NgbModalRef;
-    editor: any;
+    public editor: any;
+    public sort = 'asc';
 
     public editorial: any; // Objecto enviado para la API
 
@@ -47,7 +49,8 @@ export class EditorialComponent implements OnInit {
         private alert: AlertService,
         private editorialService: EditorialService,
         private paisService: PaisService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private router: Router
     ) {
     }
 
@@ -77,10 +80,12 @@ export class EditorialComponent implements OnInit {
             this.todoeditoriales = todoeditoriales;
         },
             error => {
-                console.log('Falló Conexion Editorial ' + error);
+                this.alert.showError(error);
+                this.router.navigate(['/login']);
             });
     }
 
+    // cargar Paises para el auto-complete
     public cargarPaises() {
         this.paisService.getPaisesTodos().subscribe((countries: ICountry[]) => {
             this.countries = countries;
@@ -151,7 +156,7 @@ export class EditorialComponent implements OnInit {
         this.editorialService.buscarNombreEditorial(nombre).subscribe((editr: any) => {
             this.editor = editr;
             console.log(this.editor);
-            },
+        },
             error => {
                 this.alert.showError(error);
             });

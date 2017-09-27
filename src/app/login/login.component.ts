@@ -16,7 +16,8 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-    constructor(private toastrService: ToastrService,
+    constructor(
+        private toastrService: ToastrService,
         private authService: AuthService,
         private _vcr: ViewContainerRef,
         public router: Router

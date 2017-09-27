@@ -4,6 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -30,14 +31,15 @@ export class AutorComponent implements OnInit {
     public model2: any = {
         'name': ''
     };
-    closeResult: string;
+    public closeResult: string;
     public titulo1 = 'LISTADO DE AUTORES';
-    todoautores = [];
-    titulo_modal = '';
-    idautor = '';
-    nombreautor = '';
-    btnguardar = '';
+    public todoautores = [];
+    public titulo_modal = '';
+    public idautor = '';
+    public nombreautor = '';
+    public btnguardar = '';
     private modalRef: NgbModalRef;
+    public sort = 'asc';
 
     public author: any; // Objecto enviado para la API
 
@@ -45,7 +47,8 @@ export class AutorComponent implements OnInit {
         private alert: AlertService,
         private autorService: AutorService,
         private paisService: PaisService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private router: Router
     ) {
     }
     // para el modal Registro y Editar
@@ -74,10 +77,12 @@ export class AutorComponent implements OnInit {
             this.todoautores = todoautores;
         },
             error => {
-                console.log('Fallo Conexion Autor ' + error);
+                this.alert.showError(error);
+                this.router.navigate(['/login']);
             });
     }
 
+    // cargar Paises para el auto-complete
     public cargarPaises() {
         this.paisService.getPaisesTodos().subscribe((countries: ICountry[]) => {
             this.countries = countries;

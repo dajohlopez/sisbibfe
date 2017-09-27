@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -19,10 +20,10 @@ import { ICountry } from '../../shared/settings/interfaces';
 })
 export class PaisComponent implements OnInit {
   // propiedades del componente pais
-  nombre: string;
-  closeResult: string;
-  country: ICountry; // Objecto enviado para la API
-  titulo1 = 'LISTADO DE PAISES';
+  public nombre: string;
+  public closeResult: string;
+  public country: ICountry; // Objecto enviado para la API
+  public titulo1 = 'LISTADO DE PAISES';
 
   public todopaises = [];
   public titulo_modal = '';
@@ -30,10 +31,13 @@ export class PaisComponent implements OnInit {
   public nombrepais = '';
   public btnguardar = '';
   private modalRef: NgbModalRef;
+  public sort = 'asc';
 
-  constructor(private paisService: PaisService,
-    private modalService: NgbModal,
-    private alert: AlertService
+  constructor(
+      private paisService: PaisService,
+      private modalService: NgbModal,
+      private alert: AlertService,
+      public router: Router
   ) {
   }
 
@@ -61,7 +65,8 @@ export class PaisComponent implements OnInit {
       this.todopaises = todocountries;
     },
       error => {
-        console.log('Falló Conexión Pais ' + error);
+        this.alert.showError(error);
+        this.router.navigate(['/login']);
       });
   }
 
@@ -79,8 +84,8 @@ export class PaisComponent implements OnInit {
           this.close();
         },
         error => {
-          console.log(error)
           this.alert.showError(error);
+          this.router.navigate(['/login']);
         });
     }
 
@@ -93,7 +98,6 @@ export class PaisComponent implements OnInit {
         },
         error => {
           this.alert.showError(error);
-          console.error('Error al modificar el Pais. ' + error);
         });
     }
 
@@ -103,8 +107,7 @@ export class PaisComponent implements OnInit {
   eliminar(idpais: number) {
     this.paisService.eliminarPais(idpais).subscribe(
       (mensaje: any) => {
-        console.log(mensaje)
-        if (mensaje.message === 'error data relation') {
+        if (mensaje.status === 404) {
           this.alert.showError(mensaje.message)
         } else {
           this.alert.showSuccess(mensaje.message);
@@ -176,5 +179,4 @@ export class PaisComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-
 }
